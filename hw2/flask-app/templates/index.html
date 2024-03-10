@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gyro Data Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div style="width: 60%; margin: 0 auto">
+      <canvas id="gyroChart"></canvas>
+    </div>
+    <script>
+      var ctx = document.getElementById("gyroChart").getContext("2d");
+      var gyroChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "X-axis",
+              backgroundColor: "blue",
+              borderColor: "blue",
+              data: [],
+              fill: false,
+            },
+            {
+              label: "Y-axis",
+              backgroundColor: "red",
+              borderColor: "red",
+              data: [],
+              fill: false,
+            },
+            {
+              label: "Z-axis",
+              backgroundColor: "green",
+              borderColor: "green",
+              data: [],
+              fill: false,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: "Gyro Data",
+          },
+          scales: {
+            xAxes: [
+              {
+                display: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: "Sample Num",
+                },
+              },
+            ],
+            yAxes: [
+              {
+                display: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: "Gyro",
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      function fetchData() {
+        fetch("/data")
+          .then((response) => response.json())
+          .then((data) => {
+            gyroChart.data.labels = data.s;
+            gyroChart.data.datasets[0].data = data.x;
+            gyroChart.data.datasets[1].data = data.y;
+            gyroChart.data.datasets[2].data = data.z;
+            gyroChart.update();
+          });
+      }
+
+      setInterval(fetchData, 2000); // 每2秒更新数据
+    </script>
+  </body>
+</html>
