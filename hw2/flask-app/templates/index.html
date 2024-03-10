@@ -17,21 +17,18 @@
           datasets: [
             {
               label: "X-axis",
-              backgroundColor: "blue",
               borderColor: "blue",
               data: [],
               fill: false,
             },
             {
               label: "Y-axis",
-              backgroundColor: "red",
               borderColor: "red",
               data: [],
               fill: false,
             },
             {
               label: "Z-axis",
-              backgroundColor: "green",
               borderColor: "green",
               data: [],
               fill: false,
@@ -71,12 +68,21 @@
         fetch("/data")
           .then((response) => response.json())
           .then((data) => {
-            gyroChart.data.labels = data.s;
-            gyroChart.data.datasets[0].data = data.x;
-            gyroChart.data.datasets[1].data = data.y;
-            gyroChart.data.datasets[2].data = data.z;
+            // 检查新数据并添加到图表
+            updateChartData(gyroChart, data.s, data.x, data.y, data.z);
             gyroChart.update();
           });
+      }
+
+      function updateChartData(chart, labels, xData, yData, zData) {
+        labels.forEach((label, index) => {
+          if (!chart.data.labels.includes(label)) {
+            chart.data.labels.push(label);
+            chart.data.datasets[0].data.push(xData[index]);
+            chart.data.datasets[1].data.push(yData[index]);
+            chart.data.datasets[2].data.push(zData[index]);
+          }
+        });
       }
 
       setInterval(fetchData, 2000); // 每2秒更新数据
