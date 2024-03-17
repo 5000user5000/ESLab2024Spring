@@ -10,6 +10,14 @@ class ScanDelegate(DefaultDelegate):
         elif isNewData:
             print ("Received new data from", dev.addr)
 
+class MyDelegate(DefaultDelegate):
+    def __init__(self):
+        DefaultDelegate.__init__(self)
+
+    def handleNotification(self, cHandle, data):
+        print("Received data: {}".format(data))
+
+
 scanner = Scanner().withDelegate(ScanDelegate())
 devices = scanner.scan(1.0)
 n=0
@@ -32,25 +40,26 @@ print (addr[num])
 
 print ("Connecting...")
 dev = Peripheral(addr[num], 'random')
+dev.setDelegate(MyDelegate())
+
 print ("Services...")
 for svc in dev.services:
     print (str(svc))
 try:
-    testService = dev.getServiceByUUID(UUID(0xfff0)) 
+    testService = dev.getServiceByUUID(UUID(0x180D)) 
     for ch in testService.getCharacteristics():
         print (str(ch))
         print("properties: "+ ch.propertiesToString())
     print("===================") 
-    print("test 0xfff0")
 
-    ch = dev.getCharacteristics(uuid=UUID(0xfff4))[0] 
-    print("CCCD value original value = :", ch.read())
-
-    #ch.write(b'm', True)
-    ch.write(b"0x0002", True)
-
-    # 檢查寫入是否成功
-    print("CCCD value set to:", ch.read())
+    ch = dev.getCharacteristics(uuid=UUID(0x2A37))[0]
+    print("ch:", ch)
+    cccd =  ch.getDescriptors(UUID(0x2902))[0]
+    cccd.write(b"\x01\x00", withResponse=True) # enable notification
+    #cccd.write(b"\x02\x00", withResponse=True) # enable indicate
+    while True:
+        if dev.waitForNotifications(1.0):
+            print("Waiting...")
 
 finally:
     dev.disconnect()

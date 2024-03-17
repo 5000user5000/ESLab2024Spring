@@ -35,16 +35,15 @@ pip install bluepy
 ### 2.2 配置 GATT 伺服器
 
 1. 打開 app，並在左側工作欄選擇`Configure GATT server`。
-2. 新增一個 server，將服務命名為`CCCD`，UUID 設定為`0xFFF0`。
-3. 增加一個 characteristic，名稱隨意，UUID 設定為`0xFFF4`。請確保將`Properties`中的`write`選項開啟，預設值可設可不設。
+2. 確定是預設的`Sample configuration`。
 
-### 2.3 啟動廣播
+### 2.3 設定與啟動廣播
 
-在 app 中啟動`advertiser`以開始廣播您的 GATT 服務。
+在 app 中的`advertiser`，新增一個`advertising packet`，注意`advertising data`那邊`ADD RECORD`，選擇`Complete Local Name`，如此才能方便找到您的手機。設定完成後便直接開始廣播您的 GATT 服務。
 
 ## 步驟 3：從 Raspberry Pi 掃描和連接
 
-在 Raspberry Pi 上執行以下指令來掃描並嘗試連接到您的 Android GATT 服務：
+把 ble_scan_connect.py 傳到您的 Raspberry Pi 上，並執行以下指令來掃描並嘗試連接到您的 Android GATT 服務：
 
 ```
 python ble_scan_connect.py
@@ -55,3 +54,4 @@ python ble_scan_connect.py
 ## 觀察和驗證
 
 連接成功後，請在 Android 手機上檢查 GATT 服務的值是否有變動，並在 Raspberry Pi 上查看 log 檔案以確認是否成功接收到來自 client 的資料。
+`ble_scan_connect.py` 預設是開啟`Notification`，所以您可以看到資料從手機傳到 Raspberry Pi。
