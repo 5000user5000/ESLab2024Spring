@@ -1,16 +1,36 @@
-## stm32 vs phone
+# 如何設定你的 BLE 專案
 
-#### 建立空的專案
+## 開始之前
 
-#### 複製github文件到剛剛空的專案  (來自[BLE_GattServer_AddService](https://github.com/ARMmbed/mbed-os-example-ble/tree/development/BLE_GattServer_AddService))
+首先，確保你已經安裝了 Mbed Studio。接下來，跟著以下步驟：
 
-#### 燒錄
+### 1. 建立專案
 
-#### 可以從Android GATT notifiy收到button訊息以及heartrate資訊
+- 在 Mbed Studio 中建立一個新的空白專案。
 
+### 2. 添加服務
 
-## stm32 vs Raspberry Pi
+- 將 `BLE_GattServer_AddService` 檔案夾底下的所有內容複製到你的空專案中。 (來自[BLE_GattServer_AddService](https://github.com/ARMmbed/mbed-os-example-ble/tree/development/BLE_GattServer_AddService))
 
-#### scp `ble_scan_connect.py` 到 raspberry 上面
+### 3. 替換檔案
 
-#### 執行從terminal看到結果
+- 把你專案中的 `./source` 資料夾裡的檔案換成這裡的四個新檔案。
+- 同樣地，把專案中的 `mbed_app.json` 檔案換成這裡的版本。
+
+### 4. 編譯與燒錄
+
+- 接下來，直接編譯並燒錄到你的 STM32 裝置中，然後運行它。
+
+### 5. 驗證 BLE 信號
+
+- 使用 Android BLE Scanner app 接收信號，確認 STM32 的 MAC 地址，並檢查是否能從 GATT 通知中收到按鈕訊息和心率資訊。
+
+## 設定 Raspberry Pi
+
+將 `ble_scan_connect.py` 檔案透過 SCP 或其他方法傳送到你的 Raspberry Pi 上：
+
+1. 在 Raspberry Pi 上執行以下命令，並根據先前得到的 stm32 MAC 地址連接上 stm32：
+   ```
+   sudo python ble_scan_connect.py
+   ```
+2. 從 terminal 上觀察結果，可以按下 stm32 user button 觀察 button 訊息的變化。
