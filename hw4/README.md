@@ -21,6 +21,11 @@
 
 - 使用 Android BLE Scanner app 接收信號，確認 STM32 的 MAC 地址，並檢查是否能從 GATT 通知中收到按鈕訊息和心率資訊。
 
+> [!NOTE]
+> 這版STM32端的程式會在每次按鈕的時候更改一次狀態，  
+> 初始狀態是`0`，按一下之後是`1`，再按變回`0`，以此規律不斷循環。  
+> LED1會顯示目前的狀態，可以用於對照GATT的資料。
+
 ## 設定 Raspberry Pi
 
 將 `ble_scan_connect.py` 檔案透過 SCP 或其他方法傳送到你的 Raspberry Pi 上：
