@@ -10,18 +10,14 @@
 
 ### 2. 添加服務
 
-- 將 `BLE_GattServer_AddService` 檔案夾底下的所有內容複製到你的空專案中。 (來自[BLE_GattServer_AddService](https://github.com/ARMmbed/mbed-os-example-ble/tree/development/BLE_GattServer_AddService))
+- 把 hw4 底下的檔案，除 python 檔外全部複製到你的空專案中。
+- 或是你也可以從將 `BLE_GattServer_AddService` 檔案夾底下的所有內容複製到你的空專案中。 (來自[BLE_GattServer_AddService](https://github.com/ARMmbed/mbed-os-example-ble/tree/development/BLE_GattServer_AddService))。並把專案中的 `./source` 資料夾裡的檔案換成這裡的四個新檔案， `mbed_app.json` 檔案也換成這裡的版本。
 
-### 3. 替換檔案
-
-- 把你專案中的 `./source` 資料夾裡的檔案換成這裡的四個新檔案。
-- 同樣地，把專案中的 `mbed_app.json` 檔案換成這裡的版本。
-
-### 4. 編譯與燒錄
+### 3. 編譯與燒錄
 
 - 接下來，直接編譯並燒錄到你的 STM32 裝置中，然後運行它。
 
-### 5. 驗證 BLE 信號
+### 4. 驗證 BLE 信號
 
 - 使用 Android BLE Scanner app 接收信號，確認 STM32 的 MAC 地址，並檢查是否能從 GATT 通知中收到按鈕訊息和心率資訊。
 
