@@ -53,19 +53,40 @@ try:
         print (str(ch))
         if(str(ch)=="Characteristic <Heart Rate Measurement>"):
             print("found HEART RATE")
-            ch_acc = ch
+            ch_acc_heartRate = ch
+        if(str(ch)=="Characteristic <a001>"):
+            print("found button maybe")
+            ch_acc_Button = ch
+        print("properties: "+ ch.propertiesToString())
+
+    for ch in accServiceHeartRate.getCharacteristics():
+        print (str(ch))
+        if(str(ch)=="Characteristic <Heart Rate Measurement>"):
+            print("found HEART RATE")
+            ch_acc_heartRate = ch
         if(str(ch)=="Characteristic <a001>"):
             print("found button maybe")
             ch_acc = ch
         print("properties: "+ ch.propertiesToString())
 
-
-    if ("READ" in ch_acc.propertiesToString()):
+    if ("READ" in ch_acc_Button.propertiesToString()):
         print("test read")
         while True:
             time.sleep(0.1)
-            b_str = ch_acc.read()
-            print(b_str)
+            b_str = ((ch_acc_Button.read()))
+            b_str = int.from_bytes(b_str, byteorder='big')
+            heart_str = ((ch_acc_heartRate.read()))
+            heart_str = int.from_bytes(heart_str, byteorder='big')
+            print(f"Button status: {b_str}")
+            print(f"HEART RATE: {heart_str}")
+            print("")
 
+
+    # if ("READ" in ch_acc.propertiesToString()):
+    #     print("test read")
+    #     while True:
+    #         time.sleep(0.1)
+    #         b_str = ch_acc.read()
+    #         print(f"HEART RATE: {b_str}")
 finally:
     dev.disconnect()
