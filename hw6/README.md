@@ -12,7 +12,7 @@
 
 ### 3. 實驗觀察
 
-- 進行實驗並使用表格或清單的形式記錄不同參數設置下的輸出變化。
+- 進行實驗並使用表格或清單的形式記錄不同參數設置下的輸出變化，以及觀察實驗值和理論值的差距。
 
 # P2 實驗步驟
 
@@ -23,11 +23,26 @@
 
 ### 2. 編譯與執行
 
-- 編譯並執行專案，可以觀察到每 128 筆數據打印後的停頓情形。
+- 編譯並執行專案。
 
-### problem-3
-* import audio program
-* do follow command
-```shell
-git apply hw_patch
-```
+### 3. 實驗觀察
+
+- 計時填滿半個 buffer(打印完 128 筆數據)的時長，得到實驗值，並觀察實驗值和理論值的差距。
+
+# P3 實驗步驟
+
+### 1. 配置程式
+
+- Mbed Studio import audio program (https://github.com/janjongboom/b-l475e-iot01a-audio-mbed/tree/master)
+- 將 `main.cpp` 的內容替換為 `p3_main.cpp`。
+
+p.s. 也可以先 git clone audio program，並把 hw_patch 檔案放入這個 audio program，然後執行以下指令 `git apply hw_patch` 或是 `git apply hw_patch.txt` ，得到 p3_main.cpp。
+
+### 2. 編譯與執行
+
+- 編譯並執行專案
+
+### 3. 實驗觀察
+
+- 使用 logic analyzer，接上 D2、D3 腳位，觀察這兩個腳位的電壓變化(看起來應該會是規律的方波)，以及相對的關係。
+- 根據方波的週期，去找出填滿半個 buffer 的時間長度，也就是測量值，以及計算出理論值，觀察這兩者是否存在著差異。
