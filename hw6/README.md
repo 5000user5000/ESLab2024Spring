@@ -24,3 +24,10 @@
 ### 2. 編譯與執行
 
 - 編譯並執行專案，可以觀察到每 128 筆數據打印後的停頓情形。
+
+### problem-3
+* import audio program
+* do follow command
+```shell
+git apply hw_patch
+```
