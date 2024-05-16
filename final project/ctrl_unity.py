@@ -8,8 +8,19 @@ def preprocess(data):
     # Your algorithm here
     # 簡易範例
     command = []  # 初始化指令
-    command[0] = 'left'  # 第一格放方位，'left', 'right', 'up', 'down'
-    command[1] = sum(data['s']) / len(data['s']) # 第二格放位移量
+    x = int(data['x'])
+    y = int(data['y'])
+    if(x > 4738647.5):
+        command[0] = 'up'
+    elif(x < -4738647.5):
+        command[0] = 'down'
+    elif(y > 8105634):
+        command[0] = 'left'
+        # print(f"i dont know {x} {type(x)}")
+        # print(x > 104278)
+    elif(y < -8105634):
+        command[0] = 'right'
+    command[1] = 10 # 第二格放位移量
 
     return command
 
@@ -19,13 +30,13 @@ def action(command):
     delta = command[1] # 位移量
     # action
     if command[0] == 'left':
-        pyautogui.dragTo( x - delta ,y,button='left')  # 按住左鍵並拖曳滑鼠到指定位置
+        pyautogui.moveTo( x - delta ,y,button='left')  # 按住左鍵並拖曳滑鼠到指定位置
     elif command[0] == 'right':
-        pyautogui.dragTo( x + delta ,y,button='left')  
+        pyautogui.moveTo( x + delta ,y,button='left')  
     elif command[0] == 'up':
-        pyautogui.dragTo( x  , y - delta ,button='left')  
+        pyautogui.moveTo( x  , y - delta ,button='left')  
     elif command[0] == 'down':
-        pyautogui.dragTo( x  ,y + delta ,button='left')  
+        pyautogui.moveTo( x  ,y + delta ,button='left')  
     # 維持原狀
     else:
         pass
@@ -42,8 +53,8 @@ def main():
     data_buffer = {'s': [], 'x': [], 'y': [], 'z': []}
 
     # 鼠標移動到初始遊戲位置
-    pyautogui.moveTo(config['game_initX'], config['game_initY'])
-    pyautogui.click()
+    # pyautogui.moveTo(config['game_initX'], config['game_initY'])
+    # pyautogui.click()
 
     # 連接 socket server
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -66,11 +77,11 @@ def main():
                     obj = json.loads(data)
                     
                     # update data buffer
-                    for key in data_buffer.keys():
-                        data_buffer[key].append(obj[key])
+                    # for key in data_buffer.keys():
+                    #     data_buffer[key].append(obj[key])
                     
                     # data preprocessing
-                    command = preprocess(data_buffer)
+                    command = preprocess(obj)
                     # action
                     action(command)
                     
