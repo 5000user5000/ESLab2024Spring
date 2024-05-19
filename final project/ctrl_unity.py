@@ -29,6 +29,7 @@ def action(command):
     x, y = pyautogui.position() # 取得當前滑鼠位置
     delta = command[1] # 位移量
     # action
+    pyautogui.mouseDown()
     if command[0] == 'left':
         pyautogui.moveTo( x - delta ,y,button='left')  # 按住左鍵並拖曳滑鼠到指定位置
     elif command[0] == 'right':
@@ -40,6 +41,7 @@ def action(command):
     # 維持原狀
     else:
         pass
+    pyautogui.mouseUp()
 
 
 def main():
