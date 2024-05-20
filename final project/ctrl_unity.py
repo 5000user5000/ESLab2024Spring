@@ -3,45 +3,60 @@ import socket
 import json
 
 
+
 def preprocess(data):
     # data preprocessing
     # Your algorithm here
     # 簡易範例
-    command = []  # 初始化指令
     x = int(data['x'])
     y = int(data['y'])
-    if(x > 4738647.5):
-        command[0] = 'up'
-    elif(x < -4738647.5):
-        command[0] = 'down'
-    elif(y > 8105634):
-        command[0] = 'left'
-        # print(f"i dont know {x} {type(x)}")
-        # print(x > 104278)
-    elif(y < -8105634):
-        command[0] = 'right'
-    command[1] = 10 # 第二格放位移量
-
+    threshold = 270
+    command = []
+    delta = 110
+    if(x > threshold):
+        print("left")
+        command.append('left')
+        delta *= (x-threshold)/threshold
+    elif(x < -threshold ):
+        print("right")
+        command.append('right')
+        delta *= (-x-threshold)/threshold
+    elif(y < -threshold):
+        print("up")
+        command.append('up')
+        delta *= (-y-threshold)/threshold
+    elif(y > threshold):
+        print("down")
+        command.append('down')
+        delta *= (y-threshold)/threshold
+    else:
+        command.append('stay')
+    delta*=1.1
+    command.append(delta)
+    print(command)
     return command
 
 
 def action(command):
     x, y = pyautogui.position() # 取得當前滑鼠位置
-    delta = command[1] # 位移量
+    # print(f"Move {command[0]} {delta} pixels")
+    instr = command[0]
+    delta = command[1]
     # action
     pyautogui.mouseDown()
-    if command[0] == 'left':
-        pyautogui.moveTo( x - delta ,y,button='left')  # 按住左鍵並拖曳滑鼠到指定位置
-    elif command[0] == 'right':
-        pyautogui.moveTo( x + delta ,y,button='left')  
-    elif command[0] == 'up':
-        pyautogui.moveTo( x  , y - delta ,button='left')  
-    elif command[0] == 'down':
-        pyautogui.moveTo( x  ,y + delta ,button='left')  
+    if instr == 'left':
+        pyautogui.moveTo( x - delta ,y,duration=0.25)  # 按住左鍵並拖曳滑鼠到指定位置
+    elif instr == 'right':
+        pyautogui.moveTo( x + delta ,y,duration=0.25)  
+    elif instr == 'up':
+        pyautogui.moveTo( x  , y - delta ,duration=0.25)  
+    elif instr == 'down':
+        pyautogui.moveTo( x  ,y + delta,duration=0.25)  
     # 維持原狀
     else:
         pass
     pyautogui.mouseUp()
+    
 
 
 def main():
@@ -49,14 +64,9 @@ def main():
     with open('setting.json') as f:
         config = json.load(f)
 
-    HOST = config['host']  # server address
-    PORT = config['port']  # server port
+    HOST = config['HOST']
+    PORT = config['PORT']
 
-    data_buffer = {'s': [], 'x': [], 'y': [], 'z': []}
-
-    # 鼠標移動到初始遊戲位置
-    # pyautogui.moveTo(config['game_initX'], config['game_initY'])
-    # pyautogui.click()
 
     # 連接 socket server
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
