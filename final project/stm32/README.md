@@ -10,6 +10,14 @@
    ```
 1. 把這個資料夾的`.h`和`.cpp`檔案全部複製到專案的`source`資料夾內
    - 如果有正確複製，應該會覆蓋掉原有的`source/main.cpp`
+1. 在`mbed_app.json`修改設定：
+
+   ```diff
+    {
+      "target_overrides": {
+        "*": {
+   +      "target_printf_lib": "std",
+   ```
 
 ## 參數調整
 
