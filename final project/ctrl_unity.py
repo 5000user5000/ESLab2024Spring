@@ -43,7 +43,9 @@ def action(command):
     instr = command[0]
     delta = command[1]
     # action
-    pyautogui.mouseDown()
+    if instr != 'stay':
+        pyautogui.mouseDown()
+
     if instr == 'left':
         pyautogui.moveTo( x - delta ,y,duration=0.25)  # 按住左鍵並拖曳滑鼠到指定位置
     elif instr == 'right':
@@ -61,11 +63,11 @@ def action(command):
 
 def main():
     # 初始設定
-    with open('setting.json') as f:
+    with open('./final project/setting.json') as f:
         config = json.load(f)
 
-    HOST = config['HOST']
-    PORT = config['PORT']
+    HOST = config['host']
+    PORT = config['port']
 
 
     # 連接 socket server
