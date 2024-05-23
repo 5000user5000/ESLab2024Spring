@@ -2,64 +2,43 @@ import pyautogui
 import socket
 import json
 
-
-
-def preprocess(data):
-    # data preprocessing
-    # Your algorithm here
-    # 簡易範例
+period = .05  # in sec
+def parse_command(data):
     x = int(data['x'])
     y = int(data['y'])
-    threshold = 270
-    command = []
-    delta = 110
-    if(x > threshold):
-        print("left")
-        command.append('left')
-        delta *= (x-threshold)/threshold
-    elif(x < -threshold ):
-        print("right")
-        command.append('right')
-        delta *= (-x-threshold)/threshold
-    elif(y < -threshold):
-        print("up")
-        command.append('up')
-        delta *= (-y-threshold)/threshold
-    elif(y > threshold):
-        print("down")
-        command.append('down')
-        delta *= (y-threshold)/threshold
+    threshold, cap = 20, 500
+    scale = 1/cap
+    pixel_per_second = 200
+    mag = pixel_per_second * period * scale  # maximum pixel per datapoint * input data normalizer
+    dx, dy = [0, 0]
+ 
+    if x > threshold:
+        dx = mag * max(x-threshold, cap)
+    elif x < -threshold:
+        dx = mag * min(x+threshold, -cap)
+ 
+    if y > threshold:
+        dy = mag * max(y-threshold, cap)
+    elif y < -threshold:
+        dy = mag * min(y+threshold, -cap)
+
+    return dx, dy
+ 
+mouse = False
+def act(dx, dy):
+    global mouse
+    x, y = pyautogui.position()
+ 
+    if dx == 0 and dy == 0:
+        if mouse:
+            mouse = False
+            pyautogui.mouseUp()
     else:
-        command.append('stay')
-    delta*=1.1
-    command.append(delta)
-    print(command)
-    return command
-
-
-def action(command):
-    x, y = pyautogui.position() # 取得當前滑鼠位置
-    # print(f"Move {command[0]} {delta} pixels")
-    instr = command[0]
-    delta = command[1]
-    # action
-    if instr != 'stay':
-        pyautogui.mouseDown()
-
-    if instr == 'left':
-        pyautogui.moveTo( x - delta ,y,duration=0.25)  # 按住左鍵並拖曳滑鼠到指定位置
-    elif instr == 'right':
-        pyautogui.moveTo( x + delta ,y,duration=0.25)  
-    elif instr == 'up':
-        pyautogui.moveTo( x  , y - delta ,duration=0.25)  
-    elif instr == 'down':
-        pyautogui.moveTo( x  ,y + delta,duration=0.25)  
-    # 維持原狀
-    else:
-        pass
-    pyautogui.mouseUp()
-    
-
+        if not mouse:
+            mouse = True
+            pyautogui.mouseDown()
+        print(f"move: {dx}, {dy}")
+        pyautogui.moveTo(x-dx, y+dy, duration=period-.01)
 
 def main():
     # 初始設定
@@ -95,9 +74,9 @@ def main():
                     #     data_buffer[key].append(obj[key])
                     
                     # data preprocessing
-                    command = preprocess(obj)
+                    dx, dy = parse_command(obj)
                     # action
-                    action(command)
+                    act(dx, dy)
                     
                 except json.JSONDecodeError:
                     print("JSON Decode Error")
