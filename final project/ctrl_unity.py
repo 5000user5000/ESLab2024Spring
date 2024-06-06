@@ -4,6 +4,7 @@ import json
 import threading
 import time
 from queue import Queue
+import select
 
 period = .05  # in sec
 data_queue = Queue()
@@ -52,16 +53,22 @@ def act():
 
 def socket_listener(HOST, PORT):
     global data_queue
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((HOST, PORT))
-        s.listen()
-        print(f"Listening on {HOST}:{PORT}")
-        conn, addr = s.accept()
-        with conn:
-            print("Connected by", addr)
-            while True:
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server_socket.bind((HOST, PORT))
+    server_socket.listen()
+    rlist = [server_socket]
+    while True:
+        readable, _, _ = select.select(rlist, [], [])
+        for s in readable:
+            if s is server_socket:
+                client_socket, addr = server_socket.accept()
+                # print(f'Connected by {addr}')
+                client_socket.setblocking(False)
+                rlist.append(client_socket)
+            else:
                 try:
-                    data = conn.recv(1024).decode('utf-8')
+                    data = s.recv(1024).decode('utf-8')
                     if not data:
                         break  # break connection
                     print("Received from socket server:", data)
