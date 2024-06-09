@@ -41,3 +41,8 @@ void WifiSocket::sendData(const string& data) {
     size_or_error = m_socket.send(data.c_str(), data.length());
     if(size_or_error <= 0) m_availability = false;
 }
+void WifiSocket::recvData() {
+    char rbuffer[64];
+    m_socket.recv(rbuffer, 64);
+    return;
+}

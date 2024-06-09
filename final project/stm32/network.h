@@ -20,4 +20,5 @@ public:
     }
 
     void sendData(const string& data);
+    void recvData();
 };
